@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JJConnect — 工具中心</title>
+  <style>
+    :root {
+      --bg: #0f1419;
+      --surface: #1a2028;
+      --surface-hover: #232b35;
+      --border: #2a333f;
+      --text: #e8ecef;
+      --text-dim: #8a96a3;
+      --accent: #d4a574;
+      --accent-hover: #e0b585;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      line-height: 1.6;
+    }
+    header {
+      padding: 48px 24px 24px;
+      text-align: center;
+      border-bottom: 1px solid var(--border);
+    }
+    .logo {
+      font-size: 32px;
+      font-weight: 600;
+      letter-spacing: -0.5px;
+      color: var(--accent);
+    }
+    .tagline {
+      margin-top: 8px;
+      color: var(--text-dim);
+      font-size: 14px;
+    }
+    main {
+      flex: 1;
+      max-width: 960px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 48px 24px;
+    }
+    .section-title {
+      font-size: 14px;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: var(--text-dim);
+      margin-bottom: 24px;
+    }
+    .tool-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 16px;
+    }
+    .tool-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 24px;
+      text-decoration: none;
+      color: inherit;
+      transition: background 0.15s, transform 0.15s, border-color 0.15s;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .tool-card:hover {
+      background: var(--surface-hover);
+      border-color: var(--accent);
+      transform: translateY(-2px);
+    }
+    .tool-card.disabled {
+      opacity: 0.5;
+      pointer-events: none;
+    }
+    .tool-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 8px;
+      background: rgba(212, 165, 116, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+    }
+    .tool-name {
+      font-size: 18px;
+      font-weight: 600;
+    }
+    .tool-name-sub {
+      font-size: 13px;
+      color: var(--text-dim);
+      font-weight: normal;
+      margin-left: 8px;
+    }
+    .tool-desc {
+      font-size: 14px;
+      color: var(--text-dim);
+      line-height: 1.5;
+    }
+    .tool-status {
+      margin-top: auto;
+      padding-top: 8px;
+      font-size: 12px;
+      color: var(--text-dim);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #6dcf7c;
+    }
+    .status-dot.pending { background: #d4a574; }
+    .status-dot.offline { background: #6b7785; }
+    footer {
+      padding: 24px;
+      text-align: center;
+      color: var(--text-dim);
+      font-size: 12px;
+      border-top: 1px solid var(--border);
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo">JJConnect</div>
+    <div class="tagline">工具中心 · Tool Hub</div>
+  </header>
+
+  <main>
+    <div class="section-title">可用工具</div>
+    <div class="tool-grid">
+
+      <a class="tool-card" href="https://jjconnect.online/" target="_self">
+        <div class="tool-icon">🎨</div>
+        <div>
+          <span class="tool-name">JSmono</span>
+          <span class="tool-name-sub">海报制作</span>
+        </div>
+        <div class="tool-desc">销售物件宣传海报生成器</div>
+        <div class="tool-status">
+          <span class="status-dot"></span>
+          已上线
+        </div>
+      </a>
+
+      <a class="tool-card" href="https://monos.jjconnect.online/" target="_self">
+        <div class="tool-icon">🏠</div>
+        <div>
+          <span class="tool-name">Rakusat 落札道</span>
+          <span class="tool-name-sub">法拍管理</span>
+        </div>
+        <div class="tool-desc">日本法院拍卖物件管理与分析系统</div>
+        <div class="tool-status">
+          <span class="status-dot"></span>
+          已上线
+        </div>
+      </a>
+
+      <a class="tool-card disabled" href="#" target="_self">
+        <div class="tool-icon">📝</div>
+        <div>
+          <span class="tool-name">Diary</span>
+          <span class="tool-name-sub">日志工具</span>
+        </div>
+        <div class="tool-desc">即将上线</div>
+        <div class="tool-status">
+          <span class="status-dot pending"></span>
+          开发中
+        </div>
+      </a>
+
+    </div>
+  </main>
+
+  <footer>
+    © 2026 JJConnect · <span id="env-tag">jjconnect-shell</span>
+  </footer>
+
+  <script>
+    // Show which deployment this is — helps during the transition
+    const host = window.location.hostname;
+    const tag = document.getElementById('env-tag');
+    if (host === 'jjconnect.online') tag.textContent = 'production';
+    else tag.textContent = host;
+  </script>
+</body>
+</html>
