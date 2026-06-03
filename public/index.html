@@ -3,211 +3,145 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>JJConnect — 工具中心</title>
+  <title>JJConnect — 不动产工具中心</title>
   <style>
     :root {
-      --bg: #0f1419;
-      --surface: #1a2028;
-      --surface-hover: #232b35;
-      --border: #2a333f;
-      --text: #e8ecef;
-      --text-dim: #8a96a3;
-      --accent: #d4a574;
-      --accent-hover: #e0b585;
+      --bg:#0f1419; --surface:#1a2028; --surface-hover:#232b35;
+      --border:#2a333f; --text:#e8ecef; --text-dim:#8a96a3;
+      --accent:#d4a574;
+      /* per-tool kanji accents (tuned for dark) */
+      --do:#5b9bd5; --do-bg:rgba(91,155,213,.12);
+      --re:#a78bfa; --re-bg:rgba(167,139,250,.13);
+      --ki:#4cc38a; --ki-bg:rgba(76,195,138,.12);
+      --ho:#e8954e; --ho-bg:rgba(232,149,78,.12);
     }
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+    * { box-sizing:border-box; margin:0; padding:0; }
     body {
-      font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      line-height: 1.6;
+      font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+      background:radial-gradient(1100px 520px at 50% -8%, #16212e 0%, var(--bg) 55%);
+      color:var(--text); min-height:100vh; display:flex; flex-direction:column; line-height:1.6;
     }
-    header {
-      padding: 48px 24px 24px;
-      text-align: center;
-      border-bottom: 1px solid var(--border);
+    header { padding:48px 24px 22px; text-align:center; border-bottom:1px solid var(--border); }
+    .logo { font-size:30px; font-weight:700; letter-spacing:-.5px; color:var(--accent); }
+    .tagline { margin-top:8px; color:var(--text-dim); font-size:14px; }
+
+    main { flex:1; max-width:860px; width:100%; margin:0 auto; padding:40px 24px 56px; }
+
+    .branch { margin-bottom:40px; }
+    .branch-head { display:flex; align-items:center; gap:13px; margin-bottom:18px; }
+    .branch-badge {
+      width:42px; height:42px; flex-shrink:0; border-radius:10px;
+      display:flex; align-items:center; justify-content:center; font-size:22px; font-weight:800;
+      background:rgba(212,165,116,.12); color:var(--accent);
     }
-    .logo {
-      font-size: 32px;
-      font-weight: 600;
-      letter-spacing: -0.5px;
-      color: var(--accent);
+    .branch-name { font-size:18px; font-weight:700; }
+    .branch-name .en { font-size:13px; font-weight:500; color:var(--text-dim); margin-left:8px; }
+    .branch-sub { font-size:12.5px; color:var(--text-dim); margin-top:1px; }
+    .branch-tag {
+      font-size:11px; font-weight:600; color:#e0b06a; background:rgba(224,176,106,.12);
+      border:1px solid rgba(224,176,106,.3); padding:1px 9px; border-radius:11px; margin-left:9px; vertical-align:2px;
     }
-    .tagline {
-      margin-top: 8px;
-      color: var(--text-dim);
-      font-size: 14px;
-    }
-    main {
-      flex: 1;
-      max-width: 960px;
-      width: 100%;
-      margin: 0 auto;
-      padding: 48px 24px;
-    }
-    .section-title {
-      font-size: 14px;
-      text-transform: uppercase;
-      letter-spacing: 2px;
-      color: var(--text-dim);
-      margin-bottom: 24px;
-    }
-    .tool-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 16px;
-    }
+
+    .tool-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(250px,1fr)); gap:14px; }
     .tool-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 24px;
-      text-decoration: none;
-      color: inherit;
-      transition: background 0.15s, transform 0.15s, border-color 0.15s;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
+      background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:20px;
+      text-decoration:none; color:inherit; display:flex; flex-direction:column; gap:11px;
+      transition:background .15s, transform .15s, border-color .15s;
     }
-    .tool-card:hover {
-      background: var(--surface-hover);
-      border-color: var(--accent);
-      transform: translateY(-2px);
+    .tool-card:hover { background:var(--surface-hover); transform:translateY(-2px); }
+    .tool-card.do:hover { border-color:var(--do); }
+    .tool-card.re:hover { border-color:var(--re); }
+    .tool-card.ki:hover { border-color:var(--ki); }
+    .tool-card.ho:hover { border-color:var(--ho); }
+    .kanji {
+      width:46px; height:46px; border-radius:10px; display:flex; align-items:center; justify-content:center;
+      font-size:26px; font-weight:800;
     }
-    .tool-card.disabled {
-      opacity: 0.5;
-      pointer-events: none;
+    .do .kanji { background:var(--do-bg); color:var(--do); }
+    .re .kanji { background:var(--re-bg); color:var(--re); }
+    .ki .kanji { background:var(--ki-bg); color:var(--ki); }
+    .ho .kanji { background:var(--ho-bg); color:var(--ho); }
+    .tool-name { font-size:17px; font-weight:700; }
+    .tool-name .sub { font-size:12.5px; color:var(--text-dim); font-weight:500; margin-left:7px; }
+    .tool-desc { font-size:13px; color:var(--text-dim); line-height:1.5; }
+    .tool-status { margin-top:auto; padding-top:6px; font-size:12px; color:var(--text-dim); display:flex; align-items:center; gap:6px; }
+    .status-dot { width:8px; height:8px; border-radius:50%; background:#6dcf7c; }
+    .status-dot.pending { background:#d4a574; }
+
+    /* placeholder branch (no tools yet) */
+    .branch-empty {
+      border:1px dashed var(--border); border-radius:12px; padding:26px; text-align:center;
+      color:var(--text-dim); font-size:13px; background:rgba(255,255,255,.012);
     }
-    .tool-icon {
-      width: 40px;
-      height: 40px;
-      border-radius: 8px;
-      background: rgba(212, 165, 116, 0.1);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 20px;
-    }
-    .tool-name {
-      font-size: 18px;
-      font-weight: 600;
-    }
-    .tool-name-sub {
-      font-size: 13px;
-      color: var(--text-dim);
-      font-weight: normal;
-      margin-left: 8px;
-    }
-    .tool-desc {
-      font-size: 14px;
-      color: var(--text-dim);
-      line-height: 1.5;
-    }
-    .tool-status {
-      margin-top: auto;
-      padding-top: 8px;
-      font-size: 12px;
-      color: var(--text-dim);
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-    .status-dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: #6dcf7c;
-    }
-    .status-dot.pending { background: #d4a574; }
-    .status-dot.offline { background: #6b7785; }
-    footer {
-      padding: 24px;
-      text-align: center;
-      color: var(--text-dim);
-      font-size: 12px;
-      border-top: 1px solid var(--border);
-    }
+
+    footer { padding:22px; text-align:center; color:var(--text-dim); font-size:12px; border-top:1px solid var(--border); }
+    footer b { color:#aeb8c4; }
+
+    @media (max-width:520px) { .tool-grid { grid-template-columns:1fr; } }
   </style>
 </head>
 <body>
   <header>
     <div class="logo">JJConnect</div>
-    <div class="tagline">工具中心 · Tool Hub</div>
+    <div class="tagline">不动产工具中心 · Real Estate Tools</div>
   </header>
 
   <main>
-    <div class="section-title">可用工具</div>
-    <div class="tool-grid">
 
-      <a class="tool-card" href="https://jjconnect.online/" target="_self">
-        <div class="tool-icon">🎨</div>
+    <!-- ── Branch 1: Auction (Rakusat) ── -->
+    <section class="branch">
+      <div class="branch-head">
+        <div class="branch-badge">競</div>
         <div>
-          <span class="tool-name">JSmono</span>
-          <span class="tool-name-sub">海报制作</span>
+          <div class="branch-name">競売 拍卖<span class="en">Rakusat · 落札ラボ</span></div>
+          <div class="branch-sub">日本法院拍卖物件 — 全流程作业平台</div>
         </div>
-        <div class="tool-desc">销售物件宣传海报生成器</div>
-        <div class="tool-status">
-          <span class="status-dot"></span>
-          已上线
-        </div>
-      </a>
+      </div>
+      <div class="tool-grid">
 
-      <a class="tool-card" href="https://monos.jjconnect.online/" target="_self">
-        <div class="tool-icon">🏠</div>
+        <a class="tool-card do" href="https://rakusat.jjconnect.online/rakusat" target="_self">
+          <div class="kanji">研</div>
+          <div class="tool-name">研<span class="sub">Lab</span></div>
+          <div class="tool-desc">法拍管理 — 批次总览、现地调查、快速分析、机会分析</div>
+          <div class="tool-status"><span class="status-dot"></span>已上线</div>
+        </a>
+
+        <a class="tool-card re" href="https://rakusat.jjconnect.online/rakusat/input/" target="_self">
+          <div class="kanji">例</div>
+          <div class="tool-name">例<span class="sub">Rei</span></div>
+          <div class="tool-desc">数据资料入例甄别 — 三点セット PDF 报告录入与核对</div>
+          <div class="tool-status"><span class="status-dot pending"></span>准备中</div>
+        </a>
+
+        <a class="tool-card ki" href="https://rakusat.jjconnect.online/diary" target="_self">
+          <div class="kanji">記</div>
+          <div class="tool-name">記<span class="sub">Diary</span></div>
+          <div class="tool-desc">进程日志 — 物件全流程操作记录与待跟进事项</div>
+          <div class="tool-status"><span class="status-dot"></span>已上线</div>
+        </a>
+
+        <a class="tool-card ho" href="https://rakusat.jjconnect.online/jsmono" target="_self">
+          <div class="kanji">報</div>
+          <div class="tool-name">報<span class="sub">マイソク</span></div>
+          <div class="tool-desc">マイソク自动生成 — 物件销售传单一键制作</div>
+          <div class="tool-status"><span class="status-dot"></span>已上线</div>
+        </a>
+
+      </div>
+    </section>
+
+    <!-- ── Branch 2: General Properties (future) ── -->
+    <section class="branch">
+      <div class="branch-head">
+        <div class="branch-badge" style="background:rgba(138,150,163,.1);color:var(--text-dim);">般</div>
         <div>
-          <span class="tool-name">Rakusat 落札道</span>
-          <span class="tool-name-sub">法拍管理</span>
+          <div class="branch-name">一般物件 一般房产<span class="branch-tag">准备中</span></div>
+          <div class="branch-sub">非拍卖一般不动产 — 同类工具，开发中</div>
         </div>
-        <div class="tool-desc">日本法院拍卖物件管理与分析系统</div>
-        <div class="tool-status">
-          <span class="status-dot"></span>
-          已上线
-        </div>
-      </a>
+      </div>
+      <div class="branch-empty">该分支工具正在规划开发中，敬请期待。</div>
+    </section>
 
-      <a class="tool-card" href="https://monos.jjconnect.online/rakusat/input/" target="_self">
-        <div class="tool-icon">📋</div>
-        <div>
-          <span class="tool-name">例 Rei</span>
-          <span class="tool-name-sub">数据资料入例甄别</span>
-        </div>
-        <div class="tool-desc">三点セット PDF 报告录入与核对 — 物件主档案数据入例</div>
-        <div class="tool-status">
-          <span class="status-dot pending"></span>
-          准备中
-        </div>
-      </a>
-
-      <a class="tool-card disabled" href="#" target="_self">
-        <div class="tool-icon">🧭</div>
-        <div>
-          <span class="tool-name">道 Do</span>
-          <span class="tool-name-sub">决策支持</span>
-        </div>
-        <div class="tool-desc">法拍物件决策支持系统</div>
-        <div class="tool-status">
-          <span class="status-dot pending"></span>
-          准备中
-        </div>
-      </a>
-
-      <a class="tool-card disabled" href="#" target="_self">
-        <div class="tool-icon">📝</div>
-        <div>
-          <span class="tool-name">Diary</span>
-          <span class="tool-name-sub">日志工具</span>
-        </div>
-        <div class="tool-desc">即将上线</div>
-        <div class="tool-status">
-          <span class="status-dot pending"></span>
-          开发中
-        </div>
-      </a>
-
-    </div>
   </main>
 
   <footer>
@@ -215,11 +149,9 @@
   </footer>
 
   <script>
-    // Show which deployment this is — helps during the transition
-    const host = window.location.hostname;
-    const tag = document.getElementById('env-tag');
-    if (host === 'jjconnect.online') tag.textContent = 'production';
-    else tag.textContent = host;
+    var host = window.location.hostname;
+    var tag = document.getElementById('env-tag');
+    if (tag) tag.textContent = (host === 'jjconnect.online') ? 'production' : host;
   </script>
 </body>
 </html>
