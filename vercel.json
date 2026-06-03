@@ -4,5 +4,19 @@
   "buildCommand": null,
   "outputDirectory": "public",
   "cleanUrls": true,
-  "trailingSlash": false
+  "trailingSlash": false,
+  "redirects": [
+    { "source": "/rakusat",          "destination": "https://rakusat.jjconnect.online/rakusat",          "permanent": true },
+    { "source": "/rakusat/:path*",   "destination": "https://rakusat.jjconnect.online/rakusat/:path*",   "permanent": true },
+    { "source": "/diary",            "destination": "https://rakusat.jjconnect.online/diary",            "permanent": true },
+    { "source": "/diary/:path*",     "destination": "https://rakusat.jjconnect.online/diary/:path*",     "permanent": true },
+    { "source": "/jsmono",           "destination": "https://rakusat.jjconnect.online/jsmono",           "permanent": true },
+    { "source": "/jsmono/:path*",    "destination": "https://rakusat.jjconnect.online/jsmono/:path*",    "permanent": true },
+    { "source": "/field",            "destination": "https://rakusat.jjconnect.online/rakusat/field",    "permanent": true },
+    { "source": "/field/:path*",     "destination": "https://rakusat.jjconnect.online/rakusat/field/:path*", "permanent": true },
+    { "source": "/analysis",         "destination": "https://rakusat.jjconnect.online/rakusat/analysis", "permanent": true },
+    { "source": "/analysis/:path*",  "destination": "https://rakusat.jjconnect.online/rakusat/analysis/:path*", "permanent": true },
+    { "source": "/batches",          "destination": "https://rakusat.jjconnect.online/rakusat/batches",  "permanent": true },
+    { "source": "/batches/:path*",   "destination": "https://rakusat.jjconnect.online/rakusat/batches/:path*", "permanent": true }
+  ]
 }
