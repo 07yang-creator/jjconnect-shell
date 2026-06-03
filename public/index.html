@@ -49,6 +49,7 @@
       transition:background .15s, transform .15s, border-color .15s;
     }
     .tool-card:hover { background:var(--surface-hover); transform:translateY(-2px); }
+    .tool-card.soon { pointer-events:none; opacity:.62; cursor:default; }
     .tool-card.do:hover { border-color:var(--do); }
     .tool-card.re:hover { border-color:var(--re); }
     .tool-card.ki:hover { border-color:var(--ki); }
@@ -106,7 +107,7 @@
           <div class="tool-status"><span class="status-dot"></span>已上线</div>
         </a>
 
-        <a class="tool-card re" href="https://rakusat.jjconnect.online/rakusat/input/" target="_self">
+        <a class="tool-card re soon" href="https://rakusat.jjconnect.online/rakusat/input/" target="_self">
           <div class="kanji">例</div>
           <div class="tool-name">例<span class="sub">Rei</span></div>
           <div class="tool-desc">数据资料入例甄别 — 三点セット PDF 报告录入与核对</div>
