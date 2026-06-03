@@ -3,144 +3,120 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>JJConnect — 不动产工具中心</title>
+  <title>落札道 — JJConnect</title>
   <style>
     :root {
-      --bg:#0f1419; --surface:#1a2028; --surface-hover:#232b35;
-      --border:#2a333f; --text:#e8ecef; --text-dim:#8a96a3;
-      --accent:#d4a574;
-      /* per-tool kanji accents (tuned for dark) */
-      --do:#5b9bd5; --do-bg:rgba(91,155,213,.12);
-      --re:#a78bfa; --re-bg:rgba(167,139,250,.13);
-      --ki:#4cc38a; --ki-bg:rgba(76,195,138,.12);
-      --ho:#e8954e; --ho-bg:rgba(232,149,78,.12);
+      /* light palette (self-contained — shell has no tokens.css) */
+      --bg:#f4f6f9; --card:#ffffff; --border:#e3e8ef;
+      --text:#1e293b; --muted:#64748b; --orange:#f2914a;
+      --do:#2b6cb0; --do-bg:#eef4fb;
+      --ki:#0f9d63; --ki-bg:#ecf8f1;
+      --ho:#dd6b20; --ho-bg:#fdf3e8;
+      --re:#6b46c1; --re-bg:#f4eefc;
     }
-    * { box-sizing:border-box; margin:0; padding:0; }
+    * { box-sizing:border-box; }
     body {
-      font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
-      background:radial-gradient(1100px 520px at 50% -8%, #16212e 0%, var(--bg) 55%);
-      color:var(--text); min-height:100vh; display:flex; flex-direction:column; line-height:1.6;
+      margin:0; min-height:100vh; display:flex; align-items:center; justify-content:center;
+      padding:32px 20px; color:var(--text);
+      font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","PingFang SC","Microsoft YaHei",sans-serif;
+      background:linear-gradient(165deg,#e9f0fb 0%,var(--bg) 60%);
     }
-    header { padding:48px 24px 22px; text-align:center; border-bottom:1px solid var(--border); }
-    .logo { font-size:30px; font-weight:700; letter-spacing:-.5px; color:var(--accent); }
-    .tagline { margin-top:8px; color:var(--text-dim); font-size:14px; }
+    .shell { width:100%; max-width:720px; }
 
-    main { flex:1; max-width:860px; width:100%; margin:0 auto; padding:40px 24px 56px; }
+    .brand { display:flex; align-items:center; gap:14px; }
+    .brand-mark {
+      width:54px; height:54px; border-radius:13px; background:var(--orange); color:#fff;
+      font-size:30px; font-weight:800; display:flex; align-items:center; justify-content:center;
+      box-shadow:0 6px 16px rgba(242,145,74,.32);
+    }
+    .brand-name { font-size:34px; font-weight:800; letter-spacing:.04em; }
+    .brand-romaji { font-size:16px; font-weight:600; color:var(--muted); letter-spacing:.06em; }
+    .brand-sub { color:var(--muted); font-size:13px; margin:8px 0 26px 68px; }
 
-    .branch { margin-bottom:40px; }
-    .branch-head { display:flex; align-items:center; gap:13px; margin-bottom:18px; }
-    .branch-badge {
-      width:42px; height:42px; flex-shrink:0; border-radius:10px;
-      display:flex; align-items:center; justify-content:center; font-size:22px; font-weight:800;
-      background:rgba(212,165,116,.12); color:var(--accent);
+    .tools { display:grid; gap:14px; }
+    .tool {
+      display:flex; align-items:center; gap:18px; text-decoration:none; color:inherit;
+      background:var(--card); border:1px solid var(--border); border-radius:16px; padding:20px 22px;
+      transition:transform .12s ease, box-shadow .12s ease, border-color .12s ease;
     }
-    .branch-name { font-size:18px; font-weight:700; }
-    .branch-name .en { font-size:13px; font-weight:500; color:var(--text-dim); margin-left:8px; }
-    .branch-sub { font-size:12.5px; color:var(--text-dim); margin-top:1px; }
-    .branch-tag {
-      font-size:11px; font-weight:600; color:#e0b06a; background:rgba(224,176,106,.12);
-      border:1px solid rgba(224,176,106,.3); padding:1px 9px; border-radius:11px; margin-left:9px; vertical-align:2px;
-    }
-
-    .tool-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(250px,1fr)); gap:14px; }
-    .tool-card {
-      background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:20px;
-      text-decoration:none; color:inherit; display:flex; flex-direction:column; gap:11px;
-      transition:background .15s, transform .15s, border-color .15s;
-    }
-    .tool-card:hover { background:var(--surface-hover); transform:translateY(-2px); }
-    .tool-card.soon { pointer-events:none; opacity:.62; cursor:default; }
-    .tool-card.do:hover { border-color:var(--do); }
-    .tool-card.re:hover { border-color:var(--re); }
-    .tool-card.ki:hover { border-color:var(--ki); }
-    .tool-card.ho:hover { border-color:var(--ho); }
+    .tool:hover { transform:translateY(-2px); box-shadow:0 12px 28px rgba(26,41,66,.13); }
     .kanji {
-      width:46px; height:46px; border-radius:10px; display:flex; align-items:center; justify-content:center;
-      font-size:26px; font-weight:800;
+      width:64px; height:64px; flex-shrink:0; border-radius:14px;
+      font-size:38px; font-weight:800; display:flex; align-items:center; justify-content:center;
     }
-    .do .kanji { background:var(--do-bg); color:var(--do); }
-    .re .kanji { background:var(--re-bg); color:var(--re); }
-    .ki .kanji { background:var(--ki-bg); color:var(--ki); }
-    .ho .kanji { background:var(--ho-bg); color:var(--ho); }
-    .tool-name { font-size:17px; font-weight:700; }
-    .tool-name .sub { font-size:12.5px; color:var(--text-dim); font-weight:500; margin-left:7px; }
-    .tool-desc { font-size:13px; color:var(--text-dim); line-height:1.5; }
-    .tool-status { margin-top:auto; padding-top:6px; font-size:12px; color:var(--text-dim); display:flex; align-items:center; gap:6px; }
-    .status-dot { width:8px; height:8px; border-radius:50%; background:#6dcf7c; }
-    .status-dot.pending { background:#d4a574; }
-
-    /* placeholder branch (no tools yet) */
-    .branch-empty {
-      border:1px dashed var(--border); border-radius:12px; padding:26px; text-align:center;
-      color:var(--text-dim); font-size:13px; background:rgba(255,255,255,.012);
+    .tool.do .kanji { background:var(--do-bg); color:var(--do); }
+    .tool.ki .kanji { background:var(--ki-bg); color:var(--ki); }
+    .tool.ho .kanji { background:var(--ho-bg); color:var(--ho); }
+    .tool.re .kanji { background:var(--re-bg); color:var(--re); }
+    .tool.do:hover { border-color:var(--do); }
+    .tool.ki:hover { border-color:var(--ki); }
+    .tool.ho:hover { border-color:var(--ho); }
+    .tool.re:hover { border-color:var(--re); }
+    .t-body { flex:1; min-width:0; }
+    .t-name { font-size:19px; font-weight:700; }
+    .t-name span.romaji { font-size:13px; font-weight:600; color:var(--muted); margin-left:9px; }
+    .t-name .prep-tag {
+      font-size:11px; font-weight:600; color:#c2410c; background:#fff7ed; border:1px solid #fed7aa;
+      padding:1px 8px; border-radius:10px; margin-left:9px; vertical-align:2px;
     }
+    .t-desc { font-size:13px; color:var(--muted); margin-top:4px; line-height:1.6; }
+    .t-arrow { color:#cbd5e1; font-size:22px; flex-shrink:0; }
 
-    footer { padding:22px; text-align:center; color:var(--text-dim); font-size:12px; border-top:1px solid var(--border); }
-    footer b { color:#aeb8c4; }
+    .foot { text-align:center; color:var(--muted); font-size:12px; margin-top:26px; letter-spacing:.03em; }
+    .foot b { color:#475569; }
 
-    @media (max-width:520px) { .tool-grid { grid-template-columns:1fr; } }
+    @media (max-width:520px) {
+      .brand-name { font-size:27px; }
+      .brand-sub { margin-left:0; }
+      .kanji { width:54px; height:54px; font-size:32px; }
+      .tool { padding:16px; gap:14px; }
+    }
   </style>
 </head>
 <body>
-  <header>
-    <div class="logo">JJConnect</div>
-    <div class="tagline">不动产工具中心 · Real Estate Tools</div>
-  </header>
+  <div class="shell">
+    <div class="brand">
+      <div class="brand-mark">札</div>
+      <div class="brand-name">落札道 <span class="brand-romaji">Rakusat</span></div>
+    </div>
+    <p class="brand-sub">日本不动产竞売 · 全流程作业平台</p>
 
-  <main>
-
-    <!-- ── Branch 1: Auction (Rakusat) ── -->
-    <section class="branch">
-      <div class="branch-head">
-        <div class="branch-badge">競</div>
-        <div>
-          <div class="branch-name">競売 拍卖<span class="en">Rakusat · 落札ラボ</span></div>
-          <div class="branch-sub">日本法院拍卖物件 — 全流程作业平台</div>
+    <div class="tools">
+      <a class="tool do" href="https://rakusat.jjconnect.online/rakusat">
+        <div class="kanji">研</div>
+        <div class="t-body">
+          <div class="t-name">研<span class="romaji">Lab</span></div>
+          <div class="t-desc">法拍管理 — 批次总览、现地调查、快速分析、机会分析</div>
         </div>
-      </div>
-      <div class="tool-grid">
+        <div class="t-arrow">→</div>
+      </a>
+      <a class="tool ki" href="https://rakusat.jjconnect.online/diary">
+        <div class="kanji">記</div>
+        <div class="t-body">
+          <div class="t-name">記<span class="romaji">Diary</span></div>
+          <div class="t-desc">进程日志 — 物件全流程操作记录与待跟进事项</div>
+        </div>
+        <div class="t-arrow">→</div>
+      </a>
+      <a class="tool ho" href="https://rakusat.jjconnect.online/justsale/">
+        <div class="kanji">報</div>
+        <div class="t-body">
+          <div class="t-name">報<span class="romaji">マイソク</span></div>
+          <div class="t-desc">マイソク自动生成 — 物件销售传单一键制作</div>
+        </div>
+        <div class="t-arrow">→</div>
+      </a>
+      <a class="tool re" href="https://monopages-git-supabase-migration-yanogins-projects.vercel.app/rakusat/input/">
+        <div class="kanji">例</div>
+        <div class="t-body">
+          <div class="t-name">例<span class="romaji">Rei</span><span class="prep-tag">准备中·可测试</span></div>
+          <div class="t-desc">数据资料入例甄别 — 三点セット PDF 报告录入与核对</div>
+        </div>
+        <div class="t-arrow">→</div>
+      </a>
+    </div>
 
-        <a class="tool-card do" href="https://rakusat.jjconnect.online/rakusat" target="_self">
-          <div class="kanji">研</div>
-          <div class="tool-name">研<span class="sub">Lab</span></div>
-          <div class="tool-desc">法拍管理 — 批次总览、现地调查、快速分析、机会分析</div>
-          <div class="tool-status"><span class="status-dot"></span>已上线</div>
-        </a>
-
-        <a class="tool-card re soon" href="https://rakusat.jjconnect.online/rakusat/input/" target="_self">
-          <div class="kanji">例</div>
-          <div class="tool-name">例<span class="sub">Rei</span></div>
-          <div class="tool-desc">数据资料入例甄别 — 三点セット PDF 报告录入与核对</div>
-          <div class="tool-status"><span class="status-dot pending"></span>准备中</div>
-        </a>
-
-        <a class="tool-card ki" href="https://rakusat.jjconnect.online/diary" target="_self">
-          <div class="kanji">記</div>
-          <div class="tool-name">記<span class="sub">Diary</span></div>
-          <div class="tool-desc">进程日志 — 物件全流程操作记录与待跟进事项</div>
-          <div class="tool-status"><span class="status-dot"></span>已上线</div>
-        </a>
-
-        <a class="tool-card ho" href="https://rakusat.jjconnect.online/justsale/" target="_self">
-          <div class="kanji">報</div>
-          <div class="tool-name">報<span class="sub">マイソク</span></div>
-          <div class="tool-desc">マイソク自动生成 — 物件销售传单一键制作</div>
-          <div class="tool-status"><span class="status-dot"></span>已上线</div>
-        </a>
-
-      </div>
-    </section>
-
-  </main>
-
-  <footer>
-    © 2026 JJConnect · <span id="env-tag">jjconnect-shell</span>
-  </footer>
-
-  <script>
-    var host = window.location.hostname;
-    var tag = document.getElementById('env-tag');
-    if (tag) tag.textContent = (host === 'jjconnect.online') ? 'production' : host;
-  </script>
+    <p class="foot">Powered by <b>JJconnect.jp</b></p>
+  </div>
 </body>
 </html>
